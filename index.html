@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html ng-app="tasklist">
+	<head>
+		<title>Task List</title>
+
+		<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="css/app.css">
+
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
+		<script src="js/app.js"></script>
+	</head>
+
+	<body ng-controller="TaskListController as taskListCtrl">
+		<div class="container">
+			<h1>Task List</h1>
+
+			<form name="addTaskForm" ng-submit="addTaskForm.$valid && taskListCtrl.addTask(task)" class="form-inline">
+				<div class="form-group">
+					<label for="taskText">Task:</label>
+					<input type="text" id="taskText" ng-model="taskListCtrl.task.text" class="form-control input-sm" required>
+				</div>
+
+				<div class="form-group">
+					<label for="taskDueDate">Due Date:</label>
+					<input type="date" id="taskDueDate" ng-model="taskListCtrl.task.duedate" class="form-control input-sm">
+				</div>
+
+				<button type="submit" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus"></span> Add Task</button>
+			</form>
+
+			<table class="table table-striped">
+				<tr>
+					<th></th>
+					<th>Task</th>
+					<th>Due Date</th>
+					<th></th>
+				</tr>
+
+				<tr ng-repeat="task in taskListCtrl.tasks | orderBy:['done', '-created']">
+					<td><input type="checkbox" ng-model="task.done"></td>
+					<td>
+						<input type="text" ng-model="task.text" ng-show="showInput" focus-input-on="{{showInput}}" class="form-control input-sm" required>
+						<span ng-hide="showInput" class="done-{{task.done}}">{{task.text}}</span>
+					</td>
+					<td>
+						<input type="date" ng-model="task.duedate" ng-show="showInput" class="form-control input-sm">
+						<span ng-hide="showInput" class="done-{{task.done}}">{{task.duedate | date:'fullDate'}}</span>
+					</td>
+					<td style="text-align:right;">
+						<a href="#" ng-click="showInput=true" ng-hide="showInput" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+						<a href="#" ng-click="showInput=false" ng-show="showInput" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-save"></span> Save</a>
+						<a href="#" ng-click="taskListCtrl.deleteTask(task)" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
