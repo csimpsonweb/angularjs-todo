@@ -9,6 +9,7 @@ A simple task list app built with AngularJS.
 ##Technologies
 
 - AngularJS
+- ColdFusion (with [Taffy REST framework](https://github.com/atuttle/Taffy))
 - HTML5
 - CSS
 
