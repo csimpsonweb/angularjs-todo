@@ -1,4 +1,4 @@
-#AngularJS Store
+#AngularJS Todo
 
 ##Overview
 
