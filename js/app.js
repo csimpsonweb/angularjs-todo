@@ -1,28 +1,53 @@
 (function () {
 	var app = angular.module('tasklist', []);
+	var restApiUrl = 'rest/index.cfm?endpoint=/';
 
-	app.controller('TaskListController', function () {
+	app.controller('TaskListController', ['$http', function ($http) {
 		var taskList = this;
 
-		taskList.tasks = [
-			{text:'Book flight', done:false, duedate:new Date(2014, 7, 12), created:new Date(2014, 1, 1)},
-			{text:'Book hotel', done:true, duedate:new Date(2014, 7, 10), created:new Date(2014, 1, 2)},
-			{text:'Purchase travel insurance', done:false, duedate:'', created:new Date(2014, 1, 3)},
-			{text:'Book car hire', done:true, duedate:new Date(2014, 7, 2), created:new Date(2014, 1, 4)},
-			{text:'Purchase holiday money', done:true, duedate:new Date(2014, 7, 1), created:new Date(2014, 1, 5)}
-		];
-
-		taskList.addTask = function (task) {
-			taskList.task.done = false;
-			taskList.task.created = new Date();
-			taskList.tasks.push(taskList.task);
-			taskList.task = {};
+		taskList.get = function () {
+			taskList.tasks = [];
+			$http.get(restApiUrl + 'tasks')
+				.success(function(data) {
+					taskList.tasks = data;
+				});
 		};
 
-		taskList.deleteTask = function (task) {
+		taskList.post = function (task) {
+			$http.post(restApiUrl + 'tasks/0', task)
+				.success(function(data){
+					task.done = false;
+					taskList.tasks.push(task);
+					taskList.errors = {};
+					task = {};
+				})
+				.error(function(data){
+					taskList.errors = data;
+				});
+		};
+
+		taskList.put = function (task) {
+			$http.put(restApiUrl + 'tasks/' + task.id, task)
+				.success(function(data){
+					taskList.errors = {};
+					taskList.toggleInput(task);
+				})
+				.error(function(data){
+					taskList.errors = data;
+				});
+		};
+
+		taskList.delete = function (task) {
 			taskList.tasks.splice(taskList.tasks.indexOf(task), 1);
+			$http.delete(restApiUrl + 'tasks/' + task.id);
 		};
-	});
+
+		taskList.toggle = function (task) {
+			task.showInput = !task.showInput;
+		}
+
+		taskList.get();
+	}]);
 
 	app.directive('focusInputOn', function ($timeout) {
 		return {

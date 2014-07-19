@@ -16,15 +16,15 @@
 		<div class="container">
 			<h1>Task List</h1>
 
-			<form name="addTaskForm" ng-submit="addTaskForm.$valid && taskListCtrl.addTask(task)" class="form-inline">
+			<form name="postForm" ng-submit="postForm.$valid && taskListCtrl.post(task)" class="form-inline" novalidate>
 				<div class="form-group">
-					<label for="taskText">Task:</label>
-					<input type="text" id="taskText" ng-model="taskListCtrl.task.text" class="form-control input-sm" required>
+					<label for="taskDescription">Task:</label>
+					<input type="text" id="taskDescription" ng-model="task.description" class="form-control input-sm" required>
 				</div>
 
 				<div class="form-group">
-					<label for="taskDueDate">Due Date:</label>
-					<input type="date" id="taskDueDate" ng-model="taskListCtrl.task.duedate" class="form-control input-sm">
+					<label for="taskDue">Due Date:</label>
+					<input type="date" id="taskDue" ng-model="task.due" class="form-control input-sm" required>
 				</div>
 
 				<button type="submit" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus"></span> Add Task</button>
@@ -41,17 +41,17 @@
 				<tr ng-repeat="task in taskListCtrl.tasks | orderBy:['done', '-created']">
 					<td><input type="checkbox" ng-model="task.done"></td>
 					<td>
-						<input type="text" ng-model="task.text" ng-show="showInput" focus-input-on="{{showInput}}" class="form-control input-sm" required>
-						<span ng-hide="showInput" class="done-{{task.done}}">{{task.text}}</span>
+						<input type="text" ng-model="task.description" ng-show="task.showInput" focus-input-on="{{showInput}}" class="form-control input-sm" required>
+						<span ng-hide="task.showInput" class="done-{{task.done}}">{{task.description}}</span>
 					</td>
 					<td>
-						<input type="date" ng-model="task.duedate" ng-show="showInput" class="form-control input-sm">
-						<span ng-hide="showInput" class="done-{{task.done}}">{{task.duedate | date:'fullDate'}}</span>
+						<input type="date" ng-model="task.due" ng-show="task.showInput" class="form-control input-sm" required>
+						<span ng-hide="task.showInput" class="done-{{task.done}}">{{task.due | date:'fullDate'}}</span>
 					</td>
 					<td style="text-align:right;">
-						<a href="#" ng-click="showInput=true" ng-hide="showInput" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-						<a href="#" ng-click="showInput=false" ng-show="showInput" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-save"></span> Save</a>
-						<a href="#" ng-click="taskListCtrl.deleteTask(task)" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+						<a href="#" ng-click="taskListCtrl.toggle(task)" ng-hide="task.showInput" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+						<a href="#" ng-click="taskListCtrl.put(task)" ng-show="task.showInput" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-save"></span> Save</a>
+						<a href="#" ng-click="taskListCtrl.delete(task)" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span> Delete</a>
 					</td>
 				</tr>
 			</table>
